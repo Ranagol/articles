@@ -1,13 +1,19 @@
 <template>
     <div>
         <h2>Articles</h2>
+
         <!-- PAGINATION -->
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                <!-- We want this class to be disabled, it there is no previous page -->
-                <li v-bind:class = "[{disabled: !pagination.prev_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.prev_page_url)">Previous</a></li>
+                <!-- PREVIOUS -->
+                <li v-bind:class = "[{disabled: !pagination.prev_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.prev_page_url)">Previous</a></li><!-- We want this class to be disabled, if there is no previous page -->
 
-                <li v-bind:class = "[{disabled: !pagination.next_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.next_page_url)">Next</a></li>
+                <!-- CURRENT PAGE -->
+                <li class="page-item disabled"><a class="page-link text dark" href="#">Page {{ pagination.current_page }} of {{ pagination.last_page }}</a></li>
+                <!--disabled in the page-item disabled: because this is disable link all the time. The link function is disabled. We use this only for displaying something like this: Page 2 of 6.  -->
+
+                <!-- NEXT -->
+                <li v-bind:class = "[{disabled: !pagination.next_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.next_page_url)">Next</a></li><!-- We want this class to be disabled, if there is no previous page -->
             </ul>
         </nav>
 
