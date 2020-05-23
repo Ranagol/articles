@@ -17,10 +17,11 @@ class ArticleController extends Controller
     public function index()
     {
         // Get articles
-        $articles = Article::paginate(15);
+        $articles = Article::orderBy('created_at', 'desc')->paginate(5);//TODO seems to me that the reversed orderBy is not working
 
         // Return collection of articles as a resource
         return ArticleResource::collection($articles);//TODO what is this?
+        //note, this is returning aside the articles a lot of useful pagination data, that will be needed
         //https://scotch.io/tutorials/laravel-collections-php-arrays-on-steroids
         //https://stackoverflow.com/questions/41466295/what-is-a-laravel-collection/45366565
     }
@@ -34,7 +35,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO is the update method here merged with the store method?
+        //TODO the update method here merged with the store method!!!! 
         $article = $request->isMethod('put') ? Article::findOrFail($request->article_id) : new Article;
 
         $article->id = $request->input('article_id');
