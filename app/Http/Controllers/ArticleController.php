@@ -21,6 +21,8 @@ class ArticleController extends Controller
 
         // Return collection of articles as a resource
         return ArticleResource::collection($articles);//TODO what is this?
+        //https://scotch.io/tutorials/laravel-collections-php-arrays-on-steroids
+        //https://stackoverflow.com/questions/41466295/what-is-a-laravel-collection/45366565
     }
 
 
@@ -39,7 +41,7 @@ class ArticleController extends Controller
         $article->title = $request->input('title');
         $article->body = $request->input('body');
 
-        if($article->save()) {
+        if($article->save()) {//TODO I don't really understand this line...
             return new ArticleResource($article);
         }
         
