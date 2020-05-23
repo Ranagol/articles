@@ -16,7 +16,8 @@ window.Vue = require('vue');
  */
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('articles', require('./components/Articles.vue'));//when registering a component, the .default must be added!
+Vue.component('articles', require('./components/Articles.vue'));//TODO when registering a component, the .default must be added! or NOT?
+Vue.component('navbar', require('./components/Navbar.vue'));
 
 const app = new Vue({
     el: '#app'
