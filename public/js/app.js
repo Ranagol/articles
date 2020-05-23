@@ -44988,6 +44988,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'Articles',
@@ -45006,14 +45017,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     created: function created() {
-        this.fetchArticles();
+        this.fetchArticles(); //this function will fetch articles
     },
 
     methods: {
         fetchArticles: function fetchArticles(page_url) {
             var _this = this;
 
-            //for requests we will use the fetch api. The page_url is an optionally argument, it will be needed for pagination.
+            //for requests we will use the fetch api. The page_url is an optionally argument, it will be needed for pagination. There may be a page_url argument, or not. When the page is created, there will be no argument. When the next or previous button in the pagination bar is clicked, then, there will be an argument. page_url in that case will be either pagination.prev_page_url or pagination.next_page_url.
             var vm = this;
             page_url = page_url || '/api/articles'; //page_url will be = page_url if there is one, OR it will be = '/api/articles'
 
@@ -45030,6 +45041,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (err) {
                 return console.log(error);
             });
+        },
+        makePagination: function makePagination(meta, links) {
+            //this is for creating the pagination
+            var pagination = {
+                current_page: meta.current_page,
+                last_page: meta.last_page,
+                next_page_url: links.next,
+                prev_page_url: links.prev
+            };
+            this.pagination = pagination;
         }
     }
 
@@ -45069,6 +45090,56 @@ var render = function() {
     "div",
     [
       _c("h2", [_vm._v("Articles")]),
+      _vm._v(" "),
+      _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+        _c("ul", { staticClass: "pagination" }, [
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: [{ disabled: !_vm.pagination.prev_page_url }]
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      return _vm.fetchArticles(_vm.pagination.prev_page_url)
+                    }
+                  }
+                },
+                [_vm._v("Previous")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "page-item",
+              class: [{ disabled: !_vm.pagination.next_page_url }]
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      return _vm.fetchArticles(_vm.pagination.next_page_url)
+                    }
+                  }
+                },
+                [_vm._v("Next")]
+              )
+            ]
+          )
+        ])
+      ]),
       _vm._v(" "),
       _vm._l(_vm.articles, function(article) {
         return _c(

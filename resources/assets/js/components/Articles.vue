@@ -1,6 +1,17 @@
 <template>
     <div>
         <h2>Articles</h2>
+        <!-- PAGINATION -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <!-- We want this class to be disabled, it there is no previous page -->
+                <li v-bind:class = "[{disabled: !pagination.prev_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.prev_page_url)">Previous</a></li>
+
+                <li v-bind:class = "[{disabled: !pagination.next_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchArticles(pagination.next_page_url)">Next</a></li>
+            </ul>
+        </nav>
+
+        <!-- ARTICLES -->
         <div class="card card-body mb-2" v-for="article in articles" :key="article.id">
             <h3>{{ article.title }}</h3>
             <p>{{ article.body }}</p>
@@ -26,10 +37,10 @@ export default {
         }
     },
     created(){
-        this.fetchArticles();
+        this.fetchArticles();//this function will fetch articles
     },
     methods: {
-        fetchArticles(page_url){//for requests we will use the fetch api. The page_url is an optionally argument, it will be needed for pagination.
+        fetchArticles(page_url){//for requests we will use the fetch api. The page_url is an optionally argument, it will be needed for pagination. There may be a page_url argument, or not. When the page is created, there will be no argument. When the next or previous button in the pagination bar is clicked, then, there will be an argument. page_url in that case will be either pagination.prev_page_url or pagination.next_page_url.
         let vm = this;
             page_url = page_url || '/api/articles'; //page_url will be = page_url if there is one, OR it will be = '/api/articles'
 
@@ -42,6 +53,15 @@ export default {
                     vm.makePagination(res.meta, res.links);//res.meta, res.links are the arrays from res, recevied from the api
                 })
                 .catch(err => console.log(error));
+        },
+        makePagination(meta, links){//this is for creating the pagination
+            let pagination = {
+                current_page: meta.current_page,
+                last_page: meta.last_page,
+                next_page_url: links.next,
+                prev_page_url: links.prev,
+            }
+            this.pagination = pagination;
         }
     }
 }
