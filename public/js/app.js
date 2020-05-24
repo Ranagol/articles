@@ -45005,6 +45005,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'Articles',
@@ -45057,7 +45071,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 prev_page_url: links.prev
             };
             this.pagination = pagination;
+        },
+        deleteArticle: function deleteArticle(id) {
+            var _this2 = this;
+
+            if (confirm('Are you sure?')) {
+                fetch('api/article/' + id, {
+                    method: 'delete' //fetch here is used for deleting. This is why it is stated that the method is 'delete'.
+                }).then(function (res) {
+                    return res.json();
+                }) //TODO I am not really sure what is happening here with the .json thingy. I need to check this part with console.dir.
+                .then(function (data) {
+                    alert('Article deleted.');
+                    _this2.fetchArticles(); // I guess after deleting this is the way how we refresh the page
+                }).catch(function (err) {
+                    return console.log(err);
+                });
+            }
+        },
+        addArticle: function addArticle() {
+            //addArticle() will add and update articles (two things!)
+            if (!this.edit) {
+                //Add new article
+                fetch('api/article', {
+                    method: 'post',
+                    body: JSON.stringify(this.article),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                });
+            } else {
+                //Update article
+            }
         }
+        //TODO how to disable this shit picture on my desktop...
+
     }
 
     //when we are fetching data from the api, we have to fetch the pagination data too.
@@ -45096,6 +45144,77 @@ var render = function() {
     "div",
     [
       _c("h2", [_vm._v("Articles")]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          staticClass: "mb-3",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.addArticle($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.article.title,
+                  expression: "article.title"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "Title" },
+              domProps: { value: _vm.article.title },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.article, "title", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.article.body,
+                  expression: "article.body"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", placeholder: "Body" },
+              domProps: { value: _vm.article.body },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.article, "body", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-light btn-block",
+              attrs: { type: "submit" }
+            },
+            [_vm._v("Save")]
+          )
+        ]
+      ),
       _vm._v(" "),
       _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
         _c("ul", { staticClass: "pagination" }, [
@@ -45169,7 +45288,22 @@ var render = function() {
           [
             _c("h3", [_vm._v(_vm._s(article.title))]),
             _vm._v(" "),
-            _c("p", [_vm._v(_vm._s(article.body))])
+            _c("p", [_vm._v(_vm._s(article.body))]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-danger",
+                on: {
+                  click: function($event) {
+                    return _vm.deleteArticle(article.id)
+                  }
+                }
+              },
+              [_vm._v("Delete")]
+            )
           ]
         )
       })

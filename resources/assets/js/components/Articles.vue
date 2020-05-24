@@ -2,6 +2,17 @@
     <div>
         <h2>Articles</h2>
 
+        <!-- ADD/EDIT NEW ARTICLE -->
+        <form @submit.prevent="addArticle" class="mb-3">
+            <div class="form-group">
+                <input v-model="article.title" type="text" class="form-control" placeholder="Title">
+            </div>
+            <div class="form-group">
+                <textarea v-model="article.body" type="text" class="form-control" placeholder="Body"></textarea>
+            </div>
+            <button type="submit" class="btn btn-light btn-block">Save</button>
+        </form>
+
         <!-- PAGINATION -->
         <nav aria-label="Page navigation example">
             <ul class="pagination">
@@ -17,10 +28,13 @@
             </ul>
         </nav>
 
-        <!-- ARTICLES -->
+        <!-- ARTICLES LIST -->
         <div class="card card-body mb-2" v-for="article in articles" :key="article.id">
             <h3>{{ article.title }}</h3>
             <p>{{ article.body }}</p>
+            <hr>
+            <!-- DELETE ARTICLE -->
+            <button @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
         </div>
     </div>
 </template>
@@ -68,7 +82,35 @@ export default {
                 prev_page_url: links.prev,
             }
             this.pagination = pagination;
+        },
+        deleteArticle(id){
+            if(confirm('Are you sure?')){
+                fetch(`api/article/${id}`, {
+                    method: 'delete'//fetch here is used for deleting. This is why it is stated that the method is 'delete'.
+                })
+                .then( res => res.json())//TODO I am not really sure what is happening here with the .json thingy. I need to check this part with console.dir.
+                .then( data => {
+                    alert('Article deleted.');
+                    this.fetchArticles();// I guess after deleting this is the way how we refresh the page
+                })
+                .catch(err => console.log(err));
+            }
+        },
+        addArticle(){//addArticle() will add and update articles (two things!)
+            if(!this.edit){
+                //Add new article
+                fetch('api/article', {
+                    method: 'post',
+                    body: JSON.stringify(this.article),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                })
+            } else {
+                //Update article
+            }
         }
+        //TODO how to disable this shit picture on my desktop...
     }
 }
 
